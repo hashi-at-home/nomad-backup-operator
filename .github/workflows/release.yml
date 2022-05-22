@@ -1,0 +1,23 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  pull_request_review:
+    branches:
+      - main
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+         fetch-depth: 0
+      - name: Setup golang
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
