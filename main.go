@@ -34,6 +34,7 @@ func run(args []string) error {
 	// Watch for SIGINT or SIGTERM signals
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 
+	// anonymous shutdown function.
 	go func() {
 		s := <-signals
 		fmt.Printf("Received %s, stopping\n", s)

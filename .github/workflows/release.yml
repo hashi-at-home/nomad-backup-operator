@@ -30,7 +30,7 @@ jobs:
             platforms: 'linux/amd64, linux/arm64'
             package: ''
             name: 'nomad-operator'
-            compress: 'true'
+            compress: 'false'
             dest: 'dist'
       - name: Setup Node.js
         uses: actions/setup-node@v2
