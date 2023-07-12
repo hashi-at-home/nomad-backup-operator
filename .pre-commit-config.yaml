@@ -20,3 +20,5 @@ repos:
     - id: detect-secrets
       args: ['--baseline', '.secrets.baseline']
       exclude: go.sum
+ci:
+  skip: []
