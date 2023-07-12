@@ -7,7 +7,7 @@ on:
     branches:
       - main
 jobs:
-  release:
+  build:
     strategy:
       matrix:
         arch:
@@ -31,8 +31,23 @@ jobs:
         run: |
           go build -buildmode exe -o dist/nomad-operator-linux-${{ matrix.arch }} .
           ls -lht dist
+          file dist/*
         env:
           GOARCH: ${{ matrix.arch }}
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: nomad-operator-linux-${{ matrix.arch }}
+          path: dist/nomad-operator-linux-${{ matrix.arch }}
+  release:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+      - name: What did we get?
+        run: ls -lht *
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
