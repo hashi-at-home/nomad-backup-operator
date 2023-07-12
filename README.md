@@ -1,4 +1,4 @@
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/hashi-at-home/nomad-backup-operator/main.svg)](https://results.pre-commit.ci/latest/github/hashi-at-home/nomad-backup-operator/main)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/hashi-at-home/nomad-backup-operator/main.svg)](https://results.pre-commit.ci/latest/github/hashi-at-home/nomad-backup-operator/main) [![Release](https://github.com/hashi-at-home/nomad-backup-operator/actions/workflows/release.yml/badge.svg)](https://github.com/hashi-at-home/nomad-backup-operator/actions/workflows/release.yml)
 
 # Nomad backup operator
 
