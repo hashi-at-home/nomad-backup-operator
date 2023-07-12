@@ -6,9 +6,6 @@ on:
   pull_request:
     branches:
       - main
-  pull_request_review:
-    branches:
-      - main
 jobs:
   release:
     runs-on: ubuntu-latest
