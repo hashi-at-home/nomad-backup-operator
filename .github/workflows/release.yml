@@ -6,11 +6,14 @@ on:
   pull_request:
     branches:
       - main
-  pull_request_review:
-    branches:
-      - main
 jobs:
-  release:
+  build:
+    strategy:
+      matrix:
+        arch:
+          - arm
+          - arm64
+          - amd64
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,20 +21,33 @@ jobs:
         with:
          fetch-depth: 0
       - name: Setup golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: 'go.mod'
+          go-version: '^1.20'
+      - name: Check go version
+        run: go version
       - name: Build
         run: |
-          go build -v ./...
-      - name: Generate build files
-        uses: thatisuday/go-cross-build@v1
+          go build -buildmode exe -o dist/nomad-operator-linux-${{ matrix.arch }} .
+          ls -lht dist
+          file dist/*
+        env:
+          GOARCH: ${{ matrix.arch }}
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v3
         with:
-            platforms: 'linux/amd64, linux/arm64'
-            package: ''
-            name: 'nomad-operator'
-            compress: 'false'
-            dest: 'dist'
+          name: nomad-operator-linux-${{ matrix.arch }}
+          path: dist/nomad-operator-linux-${{ matrix.arch }}
+  release:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+      - name: What did we get?
+        run: ls -lht *
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -39,4 +55,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ls dist ; npx semantic-release
+        run: npx semantic-release

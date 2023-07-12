@@ -20,3 +20,6 @@ nomad-operator
 
 # Go workspace file
 go.work
+
+# build artifacts
+dist/

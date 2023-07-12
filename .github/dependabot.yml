@@ -1,0 +1,13 @@
+version: 1
+updates:
+  - directory: /
+    open-pull-requests-limit: 5
+    package-ecosystem: github-actions
+    rebase-strategy: auto
+    schedule:
+      interval: weekly
+      timezone: "05:00 UTC"
+  - directory: /
+    package-ecosystem: "gomod"
+    schedule:
+      interval: weekly
