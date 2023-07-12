@@ -8,6 +8,12 @@ on:
       - main
 jobs:
   release:
+    strategy:
+      matrix:
+        arch:
+          - arm
+          - arm64
+          - amd64
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,16 +29,10 @@ jobs:
         run: go version
       - name: Build
         run: |
-          go build -v ./...
-          go build -buildmode exe -o dist/nomad-operator-linux-amd64 .
-      # - name: Generate build files
-      #   uses: thatisuday/go-cross-build@v1
-      #   with:
-      #       platforms: 'linux/amd64, linux/arm64'
-      #       package: ''
-      #       name: 'nomad-operator'
-      #       compress: 'false'
-      #       dest: 'dist'
+          go build -buildmode exe -o dist/nomad-operator-linux-${{ matrix.arch }} .
+          ls -lht dist
+        env:
+          GOARCH: ${{ matrix.arch }}
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
