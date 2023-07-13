@@ -1,5 +1,3 @@
-// Nomad Streaming API consumer
-
 package main
 
 import (
@@ -13,8 +11,7 @@ import (
 type Consumer struct {
 	client *api.Client
 	onJob  func(eventType string, job *api.Job)
-
-	stop func()
+	stop   func()
 }
 
 // NewConsumer is a function which consumes the client pointer and onJob function and returns a Consumer address
