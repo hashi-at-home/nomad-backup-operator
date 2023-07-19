@@ -3,7 +3,7 @@ module hashi-at-home/nomad-operator
 go 1.19
 
 require (
-	github.com/hashicorp/nomad v1.5.6
+	github.com/hashicorp/nomad v1.6.0
 	github.com/hashicorp/nomad/api v0.0.0-20230718173136-3a687930bd3e
 )
 
@@ -17,5 +17,5 @@ require (
 	github.com/hashicorp/hcl v1.0.1-vault-3 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	golang.org/x/exp v0.0.0-20230108222341-4b8118a2686a // indirect
+	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 )
