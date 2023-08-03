@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/hashicorp/nomad v1.6.1
-	github.com/hashicorp/nomad/api v0.0.0-20230803144350-9707aafc5b47
+	github.com/hashicorp/nomad/api v0.0.0-20230803200553-902f640c8061
 )
 
 require (
