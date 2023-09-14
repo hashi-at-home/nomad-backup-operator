@@ -1,9 +1,11 @@
 module hashi-at-home/nomad-operator
 
-go 1.19
+go 1.21
+
+toolchain go1.21.1
 
 require (
-	github.com/hashicorp/nomad v1.6.1
+	github.com/hashicorp/nomad v1.6.2
 	github.com/hashicorp/nomad/api v0.0.0-20230913205834-da7525d9f734
 )
 
