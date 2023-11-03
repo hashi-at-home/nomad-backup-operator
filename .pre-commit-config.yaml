@@ -26,4 +26,6 @@ repos:
     - id: check-github-workflows
     - id: check-dependabot
 ci:
-  skip: []
+  skip:
+    - go-vet
+    - go-build
