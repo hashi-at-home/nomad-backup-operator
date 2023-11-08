@@ -27,7 +27,9 @@ func run(args []string) error {
 	}
 
 	backup := NewBackup(client)
+	node := NewNode(client)
 	consumer := NewConsumer(client, backup.OnJob)
+	nodeConsumer := NewNodeConsumer(client, node.onNode)
 
 	// create signals channel to listen for signals sent to us from the OS
 	signals := make(chan os.Signal, 1)
@@ -39,10 +41,12 @@ func run(args []string) error {
 		s := <-signals
 		fmt.Printf("Received %s, stopping\n", s)
 		consumer.Stop()
+		nodeConsumer.nStop()
 		os.Exit(0)
 	}()
 
 	// start the consumer
 	consumer.Start()
+	nodeConsumer.Start()
 	return nil
 }

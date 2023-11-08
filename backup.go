@@ -42,7 +42,7 @@ func NewBackup(client *api.Client) *Backup {
 const (
 	// BackupFlag is the metadata flag used to trigger auto backup
 	BackupFlag = "auto-backup"
-	// BackupSchedul is the metadata key used to store the backup schedule
+	// BackupSchedule is the metadata key used to store the backup schedule
 	BackupSchedule = "backup-schedule"
 	// BackupTargetDB is the metadata key used to store the backup target database
 	BackupTargetDB = "backup-target-db"

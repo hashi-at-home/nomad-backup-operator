@@ -7,48 +7,47 @@ import (
 	"github.com/hashicorp/nomad/api"
 )
 
-// create Consumer struct containing client and onJob function
-type Consumer struct {
+// create NodeConsumer struct containing client and onNode function
+type NodeConsumer struct {
 	client *api.Client
-	onJob  func(eventType string, job *api.Job)
+	onNode func(eventType string, node *api.Node)
 	stop   func()
 }
 
-// NewConsumer is a function which consumes the client pointer and onJob function and returns a Consumer address
-func NewConsumer(client *api.Client, onJob func(eventType string, job *api.Job)) *Consumer {
-	return &Consumer{
+// NewNodeConsumer is a function which consumes the client pointer and onNode function and returns a consumer address
+func NewNodeConsumer(client *api.Client, onNode func(eventType string, node *api.Node)) *NodeConsumer {
+	return &NodeConsumer{
 		client: client,
-		onJob:  onJob,
+		onNode: onNode,
 	}
 }
 
-// Stop is a function of type pointer to Consumer which stops the consumer
-func (c *Consumer) Stop() {
-	if c.stop != nil {
-		c.stop()
+// nStop is a function of type pointer to Consumer which stops the consumer
+func (n *NodeConsumer) nStop() {
+	if n.stop != nil {
+		n.stop()
 	}
 }
 
-// Start is a function of type pointer to consumer and starts a context in the background
-func (c *Consumer) Start() {
+func (n *NodeConsumer) Start() {
 	ctx := context.Background()
-	ctx, c.stop = context.WithCancel(ctx)
+	ctx, n.stop = context.WithCancel(ctx)
 
-	c.consume(ctx)
+	n.consumeNode(ctx)
 }
 
 // consume is a function of type pointer to Consumer which takes as input a context and returns and error
-func (c *Consumer) consume(ctx context.Context) error {
+func (c *NodeConsumer) consumeNode(ctx context.Context) error {
 	// index is a variable of type unit64 which tracks the job's index
 	var index uint64 = 0
 	// get the job list and set index to the last job's index
-	if _, meta, err := c.client.Jobs().List(nil); err == nil {
+	if _, meta, err := c.client.Nodes().List(nil); err == nil {
 		index = meta.LastIndex
 	}
 
 	// get all the job event topics
 	topics := map[api.Topic][]string{
-		api.TopicJob: {"*"},
+		api.TopicNode: {"*"},
 	}
 
 	// create new Nomad events client
@@ -69,7 +68,7 @@ func (c *Consumer) consume(ctx context.Context) error {
 			if event.IsHeartbeat() {
 				continue
 			}
-			c.handleEvent(event)
+			c.handleNodeEvent(event)
 		}
 	}
 }
@@ -77,7 +76,7 @@ func (c *Consumer) consume(ctx context.Context) error {
 // handleEvent is a function of type pointer to Consumer
 // which takes a pointer to a list of API events as input
 // and returns a void
-func (c *Consumer) handleEvent(event *api.Events) {
+func (c *NodeConsumer) handleNodeEvent(event *api.Events) {
 	if event.Err != nil {
 		fmt.Printf("received error %s\n", event.Err)
 		return
@@ -85,27 +84,23 @@ func (c *Consumer) handleEvent(event *api.Events) {
 
 	// loop over events
 	for _, e := range event.Events {
-		// ignore event types that are not of type JobRegistered or JobDeregistered
-		if e.Type != "JobRegistered" && e.Type != "JobDeregistered" {
-			return
-		}
 
 		// Get the job from the event
-		job, err := e.Job()
+		node, err := e.Node()
 		if err != nil {
 			fmt.Printf("received error %s\n", err)
 			return
 		}
 
 		// ignore nil jobs
-		if job == nil {
+		if node == nil {
 			return
 		}
 
 		// log the event
-		fmt.Printf("==> %s: %s (%s)...\n", e.Type, *job.ID, *job.Status)
+		fmt.Printf("==> %s: %s (%s)...\n", e.Type, node.Name, node.ID)
 
 		// call the onJob function
-		c.onJob(e.Type, job)
+		c.onNode(e.Type, node)
 	}
 }
