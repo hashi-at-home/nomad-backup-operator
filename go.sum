@@ -186,6 +186,8 @@ github.com/hashicorp/nomad/api v0.0.0-20231115040012-26746a409316 h1:NHxfMlCRMx9
 github.com/hashicorp/nomad/api v0.0.0-20231115040012-26746a409316/go.mod h1:ijDwa6o1uG1jFSq6kERiX2PamKGpZzTmo0XOFNeFZgw=
 github.com/hashicorp/nomad/api v0.0.0-20231116205011-4ec934344717 h1:LsfTtw65BkWQzxFbd/mDpsQ+sGPWx3qm+aKBFyjtwu4=
 github.com/hashicorp/nomad/api v0.0.0-20231116205011-4ec934344717/go.mod h1:ijDwa6o1uG1jFSq6kERiX2PamKGpZzTmo0XOFNeFZgw=
+github.com/hashicorp/nomad/api v0.0.0-20231117193520-ff928a804590 h1:9uH8vfANeT2tSt3DQ7oHg6V67JBNpcxePozVze5Q/xw=
+github.com/hashicorp/nomad/api v0.0.0-20231117193520-ff928a804590/go.mod h1:ijDwa6o1uG1jFSq6kERiX2PamKGpZzTmo0XOFNeFZgw=
 github.com/hashicorp/serf v0.10.1 h1:Z1H2J60yRKvfDYAOZLd2MU0ND4AH/WDz7xYHDWQsIPY=
 github.com/mattn/go-colorable v0.1.13 h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=
 github.com/mattn/go-isatty v0.0.16 h1:bq3VjFmv/sOjHtdEhmkEV4x1AJtvUvOJ2PFAZ5+peKQ=
