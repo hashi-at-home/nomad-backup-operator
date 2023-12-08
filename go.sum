@@ -34,6 +34,8 @@ github.com/hashicorp/nomad v1.6.2 h1:7weYUl9zqP7S32RWQNJFpqNS1FjJClJUY7+HnfFWTe8
 github.com/hashicorp/nomad v1.6.2/go.mod h1:+3qVd8Gv7prncAasOCU3StGpDejqR0Wb7vX5vnTgyXs=
 github.com/hashicorp/nomad v1.6.3 h1:M22raG/TH11N5XNRd/uQn64R/oeqQkwvQ/fvpoCvRCQ=
 github.com/hashicorp/nomad v1.6.3/go.mod h1:B1H0umrJZPs5dBqjwMKmBkjKpsH9HhMOW6S8rnpXu44=
+github.com/hashicorp/nomad v1.7.1 h1:Jyr7QHKsguIWZvpOTg+a1u718T55zkmtgWJ/LnLKCi8=
+github.com/hashicorp/nomad v1.7.1/go.mod h1:zKtrtjVfOa21IZDBzp90sZikgsRS5wCZqWdEp86gCxU=
 github.com/hashicorp/nomad/api v0.0.0-20230711214114-8253ec86a21e h1:Hh1tNGemctn1MhnDHYwnFR8fHS1sVIuRQk7Qfgxmhn8=
 github.com/hashicorp/nomad/api v0.0.0-20230711214114-8253ec86a21e/go.mod h1:O23qLAZuCx4htdY9zBaO4cJPXgleSFEdq6D/sezGgYE=
 github.com/hashicorp/nomad/api v0.0.0-20230712150243-74335b3bfe48 h1:G+LWYon2Dho8gqITvcWlowEsfX+YRskp7ScsdRsBkig=
@@ -205,5 +207,7 @@ golang.org/x/exp v0.0.0-20230321023759-10a507213a29 h1:ooxPy7fPvB4kwsA2h+iBNHkAb
 golang.org/x/exp v0.0.0-20230321023759-10a507213a29/go.mod h1:CxIveKay+FTh1D0yPZemJVgC/95VzuuOLq5Qi4xnoYc=
 golang.org/x/exp v0.0.0-20230728194245-b0cb94b80691 h1:/yRP+0AN7mf5DkD3BAI6TOFnd51gEoDEb8o35jIFtgw=
 golang.org/x/exp v0.0.0-20230728194245-b0cb94b80691/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
+golang.org/x/exp v0.0.0-20231006140011-7918f672742d h1:jtJma62tbqLibJ5sFQz8bKtEM8rJBtfilJ2qTU199MI=
+golang.org/x/exp v0.0.0-20231006140011-7918f672742d/go.mod h1:ldy0pHrwJyGW56pPQzzkH36rKxoZW1tw7ZJpeKx+hdo=
 golang.org/x/sys v0.5.0 h1:MUK/U/4lj1t1oPg0HfuXDN/Z1wv31ZJ/YcPiGccS4DU=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
