@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.1
 
 require (
-	github.com/hashicorp/nomad v1.6.3
+	github.com/hashicorp/nomad v1.7.1
 	github.com/hashicorp/nomad/api v0.0.0-20231117193520-ff928a804590
 )
 
@@ -19,5 +19,5 @@ require (
 	github.com/hashicorp/hcl v1.0.1-vault-3 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	golang.org/x/exp v0.0.0-20230728194245-b0cb94b80691 // indirect
+	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 )
