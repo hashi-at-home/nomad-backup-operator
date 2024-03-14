@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	"github.com/hashicorp/nomad/api"
 )
@@ -85,10 +86,15 @@ func (c *Consumer) handleEvent(event *api.Events) {
 		fmt.Printf("received error %s\n", event.Err)
 		return
 	}
+	eventTypes := []string{"JobRegistered", "JobDeregistered"}
 
 	// loop over events
 	for _, e := range event.Events {
 		// ignore event types that are not of type JobRegistered or JobDeregistered
+
+		if slices.Contains(eventTypes, e.Type) {
+			fmt.Printf("Selected")
+		}
 		if e.Type != "JobRegistered" && e.Type != "JobDeregistered" {
 			return
 		}
@@ -112,3 +118,24 @@ func (c *Consumer) handleEvent(event *api.Events) {
 		c.onJob(e.Type, job)
 	}
 }
+
+// HandleJob is a function which takes a single Nomad event and processes it
+// func handleJob(api.Events.event* e) {
+// 	// Get the job from the event
+// 	job, err := e.Job()
+// 	if err != nil {
+// 		fmt.Printf("received error %s\n", err)
+// 		return
+// 	}
+
+// 	// ignore nil jobs
+// 	if job == nil {
+// 		return
+// 	}
+
+// 	// log the event
+// 	fmt.Printf("==> %s: %s (%s)...\n", e.Type, *job.ID, *job.Status)
+
+// 	// call the onJob function
+// 	c.onJob(e.Type, job)
+// }
