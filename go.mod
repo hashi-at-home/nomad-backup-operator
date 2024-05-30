@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.22.2
 
 require (
-	github.com/hashicorp/nomad v1.7.7
+	github.com/hashicorp/nomad v1.8.0
 	github.com/hashicorp/nomad/api v1.7.4
 )
 
