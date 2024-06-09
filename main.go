@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/hashicorp/nomad/api"
+	vault "github.com/hashicorp/vault/api"
 )
 
 func main() {
@@ -20,6 +21,20 @@ func main() {
 }
 
 func run(args []string) error {
+
+	// create Vault client
+
+	vaultConfig := vault.DefaultConfig()
+	vaultConfig.Address = os.Getenv("VAULT_ADDR")
+
+	vaultClient, err := vault.NewClient(vaultConfig)
+
+	if err != nil {
+		log.Fatal("Unable to initialize Vault")
+	}
+
+	vaultClient.SetToken(os.Getenv("VAULT_TOKEN"))
+
 	// create Nomad client by calling NewClient()
 	client, err := api.NewClient(&api.Config{Address: "http://bare:4646", Namespace: "default"})
 	if err != nil {
@@ -37,10 +52,8 @@ func run(args []string) error {
 		return err
 	}
 
-	backup := NewBackup(client)
-
+	backup := NewBackup(client, vaultClient)
 	consumer := NewConsumer(client, backup.OnJob)
-
 	fmt.Println(backup.client.Address())
 
 	// create signals channel to listen for signals sent to us from the OS
