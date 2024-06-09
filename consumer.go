@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/hashicorp/nomad/api"
 )
@@ -36,7 +37,7 @@ func (c *Consumer) Stop() {
 func (c *Consumer) Start() {
 	ctx := context.Background()
 	ctx, c.stop = context.WithCancel(ctx)
-
+	fmt.Println("Starting")
 	c.consume(ctx)
 }
 
@@ -45,19 +46,25 @@ func (c *Consumer) consume(ctx context.Context) error {
 	// index is a variable of type unit64 which tracks the job's index
 	var index uint64 = 0
 	// get the job list and set index to the last job's index
-	if _, meta, err := c.client.Jobs().List(nil); err == nil {
+	q := api.QueryOptions{
+		Namespace: "default",
+		Region:    "global",
+		Headers: map[string]string{
+			"X-Nomad-Token": os.Getenv("NOMAD_TOKEN")},
+	}
+	if _, meta, err := c.client.Jobs().List(&q); err == nil {
 		index = meta.LastIndex
 	}
 
+	fmt.Printf("Index is now %d", index)
 	// get all the job event topics
 	topics := map[api.Topic][]string{
 		api.TopicJob: {"*"},
 	}
-
 	// create new Nomad events client
 	eventsClient := c.client.EventStream()
 	// create new stream channel
-	eventCh, err := eventsClient.Stream(ctx, topics, index, &api.QueryOptions{})
+	eventCh, err := eventsClient.Stream(ctx, topics, index, &q)
 	if err != nil {
 		return err
 	}
@@ -72,6 +79,7 @@ func (c *Consumer) consume(ctx context.Context) error {
 			if event.IsHeartbeat() {
 				continue
 			}
+			fmt.Println("Handling event")
 			c.handleEvent(event)
 		}
 	}
