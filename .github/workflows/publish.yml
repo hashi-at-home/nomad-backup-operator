@@ -1,0 +1,28 @@
+name: Publish
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+jobs:
+  buildpack:
+    name: Buildpack
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout Code
+        uses: actions/checkout@v4
+      - id: setup-tools
+        name: Setup Tools
+        uses: buildpacks/github-actions/setup-tools@5.7.2
+      - id: setup-pack
+        name: Setup Pack
+        uses: buildpacks/github-actions/setup-pack@5.7.2
+      - id: package
+        name: Build Container
+        run:  pack \
+              build \
+              ghcr.io/hashi-at-home/nomad-operator \
+              --path . \
+              --builder paketobuildpacks/builder-jammy-tiny
