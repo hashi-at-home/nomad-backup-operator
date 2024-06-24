@@ -18,6 +18,8 @@ github.com/hashicorp/hcl v1.0.1-vault-3 h1:V95v5KSTu6DB5huDSKiq4uAfILEuNigK/+qPE
 github.com/hashicorp/hcl v1.0.1-vault-3/go.mod h1:XYhtn6ijBSAj6n4YqAaf7RBPS4I06AItNorpy+MoQNM=
 github.com/hashicorp/nomad v1.8.0 h1:c3IcPvq8olXNYevFm3aR3CujFwbU3969oU7HBMrCsSM=
 github.com/hashicorp/nomad v1.8.0/go.mod h1:SAb/TiO6JskCFTxKfWJKeEqZ/iWsvzDzUgRk2X/eI3Y=
+github.com/hashicorp/nomad v1.8.1 h1:WDVz8z0Szx9gfPNje+jIFqUZroJ4nXbWHSNcc0hzpe0=
+github.com/hashicorp/nomad v1.8.1/go.mod h1:boe1jvdt70t0kCOAg0y4HDjW4ZWHLPvfMKz+cbeiTDg=
 github.com/hashicorp/nomad/api v0.0.0-20240607151221-a9332928974c h1:1LQfOCmUfo+J7KPfpPoFfv6qeRXMvc6IqV71nLN+wko=
 github.com/hashicorp/nomad/api v0.0.0-20240607151221-a9332928974c/go.mod h1:svtxn6QnrQ69P23VvIWMR34tg3vmwLz4UdUzm1dSCgE=
 github.com/mitchellh/go-homedir v1.1.0 h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG+4E0Y=
