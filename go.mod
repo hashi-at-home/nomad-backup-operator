@@ -1,11 +1,11 @@
 module hashi-at-home/nomad-operator
 
-go 1.21
+go 1.22
 
 toolchain go1.22.4
 
 require (
-	github.com/hashicorp/nomad v1.8.0
+	github.com/hashicorp/nomad v1.8.1
 	github.com/hashicorp/nomad/api v0.0.0-20240607151221-a9332928974c
 	github.com/stretchr/testify v1.9.0
 )
