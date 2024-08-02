@@ -40,6 +40,8 @@ github.com/hashicorp/nomad/api v0.0.0-20240724131803-92d216f3b8c4 h1:64LxJG40F+u
 github.com/hashicorp/nomad/api v0.0.0-20240724131803-92d216f3b8c4/go.mod h1:svtxn6QnrQ69P23VvIWMR34tg3vmwLz4UdUzm1dSCgE=
 github.com/hashicorp/nomad/api v0.0.0-20240730163956-8ce942b5b3e8 h1:gcEV9QoF5dG0pomZ6V7MDVvrkYpf1nuw9DP8JnyenVU=
 github.com/hashicorp/nomad/api v0.0.0-20240730163956-8ce942b5b3e8/go.mod h1:svtxn6QnrQ69P23VvIWMR34tg3vmwLz4UdUzm1dSCgE=
+github.com/hashicorp/nomad/api v0.0.0-20240801185634-0c01b2d4e499 h1:NX2uose0/MhX4nN6LEuS54KqnYzIaL4nj8/IvAmVwhc=
+github.com/hashicorp/nomad/api v0.0.0-20240801185634-0c01b2d4e499/go.mod h1:svtxn6QnrQ69P23VvIWMR34tg3vmwLz4UdUzm1dSCgE=
 github.com/mitchellh/go-homedir v1.1.0 h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG+4E0Y=
 github.com/mitchellh/go-homedir v1.1.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
