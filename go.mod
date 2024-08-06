@@ -2,7 +2,7 @@ module hashi-at-home/nomad-operator
 
 go 1.22
 
-toolchain go1.22.5
+toolchain go1.22.6
 
 require (
 	github.com/hashicorp/nomad v1.8.2
