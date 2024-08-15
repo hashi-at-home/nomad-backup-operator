@@ -6,7 +6,7 @@ toolchain go1.23.0
 
 require (
 	github.com/hashicorp/nomad v1.8.3
-	github.com/hashicorp/nomad/api v0.0.0-20240813155321-c1362c03df47
+	github.com/hashicorp/nomad/api v0.0.0-20240814205821-682c8c0c8123
 	github.com/stretchr/testify v1.9.0
 )
 
