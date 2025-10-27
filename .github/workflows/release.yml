@@ -35,7 +35,7 @@ jobs:
         env:
           GOARCH: ${{ matrix.arch }}
       - name: Upload math result for job 1
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: nomad-operator-linux-${{ matrix.arch }}
           path: dist/nomad-operator-linux-${{ matrix.arch }}
