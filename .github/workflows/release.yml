@@ -35,7 +35,7 @@ jobs:
         env:
           GOARCH: ${{ matrix.arch }}
       - name: Upload math result for job 1
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: nomad-operator-linux-${{ matrix.arch }}
           path: dist/nomad-operator-linux-${{ matrix.arch }}
@@ -47,7 +47,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Download math result for job 1
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
       - name: What did we get?
         run: ls -lht *
       - name: Setup Node.js
