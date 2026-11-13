@@ -12,7 +12,7 @@ jobs:
     steps:
       - id: checkout
         name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - id: setup-tools
         name: Setup Tools
         uses: buildpacks/github-actions/setup-tools@5.7.2
@@ -21,8 +21,8 @@ jobs:
         uses: buildpacks/github-actions/setup-pack@5.7.2
       - id: package
         name: Build Container
-        run:  pack \
-              build \
-              ghcr.io/hashi-at-home/nomad-operator \
-              --path . \
-              --builder paketobuildpacks/builder-jammy-tiny
+        run: pack \
+          build \
+          ghcr.io/hashi-at-home/nomad-operator \
+          --path . \
+          --builder paketobuildpacks/builder-jammy-tiny
