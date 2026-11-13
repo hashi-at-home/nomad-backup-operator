@@ -1,27 +1,46 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
 	nomad "github.com/hashicorp/nomad/api"
 	vault "github.com/hashicorp/vault/api"
+
+	"github.com/charmbracelet/log"
 )
 
 func main() {
 	log.SetOutput(os.Stdout)
-	if err := run(os.Args[:]); err != nil {
+
+	if err := run(context.Background()); err != nil {
 		fmt.Println(err)
 		log.Fatal(err)
 		os.Exit(1)
 	}
 }
 
-func run(args []string) error {
+func run(ctx context.Context) error {
 
+	// configure Nomad Address
+	nomadAddr := os.Getenv("NOMAD_ADDR")
+
+	if nomadAddr == "" {
+		// set nomad addr to local agent if it's not set.
+		nomadAddr = "http://localhost:4647"
+	}
+	snapshotOutDir := os.Getenv("SNAPSHOT_DIR")
+	if snapshotOutDir == "" {
+		snapshotOutDir = "."
+	}
+
+	nomadToken := os.Getenv("NOMAD_TOKEN")
+	if nomadToken == "" {
+		return fmt.Errorf("NOMAD_TOKEN not set.")
+	}
 	// create Vault client
 	vaultConfig := vault.DefaultConfig()
 	vaultConfig.Address = os.Getenv("VAULT_ADDR")
