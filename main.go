@@ -27,7 +27,6 @@ func run(args []string) error {
 	vaultConfig.Address = os.Getenv("VAULT_ADDR")
 
 	vaultClient, err := vault.NewClient(vaultConfig)
-
 	if err != nil {
 		log.Fatal("Unable to initialize Vault")
 	}
@@ -52,7 +51,7 @@ func run(args []string) error {
 	}
 
 	backup := NewBackup(client, vaultClient)
-	consumer := NewConsumer(client, backup.OnJob)
+	consumer := NewConsumer(client, backup.OnJob, vaultClient)
 	fmt.Println(backup.client.Address())
 
 	// create signals channel to listen for signals sent to us from the OS
@@ -70,7 +69,7 @@ func run(args []string) error {
 		os.Exit(0)
 	}()
 
-	// start the consumer
-	consumer.Start()
+	// start the consumer with the vault client
+	consumer.Start(vaultClient)
 	return nil
 }

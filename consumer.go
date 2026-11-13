@@ -5,24 +5,30 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 
-	"github.com/hashicorp/nomad/api"
+	nomad "github.com/hashicorp/nomad/api"
+	vault "github.com/hashicorp/vault/api"
 )
 
 // create Consumer struct containing client and onJob function
 type Consumer struct {
-	client *api.Client
-	onJob  func(eventType string, job *api.Job)
+	client *nomad.Client
+	onJob  func(eventType string, job *nomad.Job)
+	vault  *vault.Client
+	stop   func()
+}
 
-	stop func()
+type NomadCredentials struct {
+	AccessorId string `json:"accessor_id"`
+	SecretId   string `json:"secret_id"`
 }
 
 // NewConsumer is a function which consumes the client pointer and onJob function and returns a Consumer address
-func NewConsumer(client *api.Client, onJob func(eventType string, job *api.Job)) *Consumer {
+func NewConsumer(client *nomad.Client, onJob func(eventType string, job *nomad.Job), vault *vault.Client) *Consumer {
 	return &Consumer{
 		client: client,
 		onJob:  onJob,
+		vault:  vault,
 	}
 }
 
@@ -34,23 +40,38 @@ func (c *Consumer) Stop() {
 }
 
 // Start is a function of type pointer to consumer and starts a context in the background
-func (c *Consumer) Start() {
+func (c *Consumer) Start(vault *vault.Client) {
 	ctx := context.Background()
 	ctx, c.stop = context.WithCancel(ctx)
 	fmt.Println("Starting")
-	c.consume(ctx)
+	c.consume(ctx, vault)
 }
 
 // consume is a function of type pointer to Consumer which takes as input a context and returns and error
-func (c *Consumer) consume(ctx context.Context) error {
+func (c *Consumer) consume(ctx context.Context, vault *vault.Client) error {
+	secret, err := vault.Logical().ReadWithContext(ctx, "nomad/creds/backup-operator")
+	if err != nil {
+		return fmt.Errorf("Error getting nomad token %w", err)
+	}
+
+	if secret != nil { // pragma: allowlist secret
+		return fmt.Errorf("Nomad Credentials not returned from Vault")
+	}
+
+	secretID, ok := secret.Data["secret_id"].(string)
+	if !ok {
+		return fmt.Errorf("Nomad Secret ID not returned from Vault response")
+	}
+	c.client.SetSecretID(secretID)
+
 	// index is a variable of type unit64 which tracks the job's index
 	var index uint64 = 0
 	// get the job list and set index to the last job's index
-	q := api.QueryOptions{
+	q := nomad.QueryOptions{
 		Namespace: "default",
 		Region:    "global",
 		Headers: map[string]string{
-			"X-Nomad-Token": os.Getenv("NOMAD_TOKEN")},
+			"X-Nomad-Token": secretID},
 	}
 	if _, meta, err := c.client.Jobs().List(&q); err == nil {
 		index = meta.LastIndex
@@ -58,8 +79,8 @@ func (c *Consumer) consume(ctx context.Context) error {
 
 	fmt.Printf("Index is now %d", index)
 	// get all the job event topics
-	topics := map[api.Topic][]string{
-		api.TopicJob: {"*"},
+	topics := map[nomad.Topic][]string{
+		nomad.TopicJob: {"*"},
 	}
 	// create new Nomad events client
 	eventsClient := c.client.EventStream()
@@ -88,7 +109,7 @@ func (c *Consumer) consume(ctx context.Context) error {
 // handleEvent is a function of type pointer to Consumer
 // which takes a pointer to a list of API events as input
 // and returns a void
-func (c *Consumer) handleEvent(event *api.Events) {
+func (c *Consumer) handleEvent(event *nomad.Events) {
 	if event.Err != nil {
 		fmt.Printf("received error %s\n", event.Err)
 		return

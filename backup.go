@@ -9,7 +9,7 @@ import (
 	"text/template"
 
 	"github.com/hashicorp/nomad/api"
-	"github.com/hashicorp/nomad/jobspec"
+	jobspec "github.com/hashicorp/nomad/jobspec2"
 	vault "github.com/hashicorp/vault/api"
 )
 
@@ -51,8 +51,7 @@ const (
 	BackupTargetDB = "backup-target-db"
 )
 
-// OnJob is a function of type pointer to Backup which takes a string and pointer to nomad job
-// and returns nil
+// OnJob is a function of type pointer to Backup which takes a string and pointer to nomad job and returns nil
 func (b *Backup) OnJob(eventType string, job *api.Job) {
 
 	// filter out all job IDs that do not have the prefix backup-
@@ -151,7 +150,7 @@ func (b *Backup) createBackupJob(jobId string, s settings) error {
 	}
 
 	// Parse the Nomad job spec from the buffer
-	job, err := jobspec.Parse(&buf)
+	job, err := jobspec.Parse("backup.hcl", &buf)
 	if err != nil {
 		return err
 	}
