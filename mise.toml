@@ -1,0 +1,8 @@
+[settings]
+auto_install = true
+
+[env]
+
+[tools]
+prek = "0.5.10"
+go = "1.27"

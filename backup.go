@@ -9,7 +9,8 @@ import (
 	"text/template"
 
 	"github.com/hashicorp/nomad/api"
-	"github.com/hashicorp/nomad/jobspec"
+	jobspec "github.com/hashicorp/nomad/jobspec2"
+	vault "github.com/hashicorp/vault/api"
 )
 
 // backupHcl is the name of the backup hcl file
@@ -20,7 +21,8 @@ var backupHcl string
 
 // Backup is a struct containing a pointer to a nomad API client
 type Backup struct {
-	client *api.Client
+	client      *api.Client
+	vaultClient *vault.Client
 }
 
 // settings is a struct to contain some Nomad job settings
@@ -33,9 +35,10 @@ type settings struct {
 
 // NewBackup is a function which takes a pointer to a nomad API client
 // and returns the address of the Backup
-func NewBackup(client *api.Client) *Backup {
+func NewBackup(client *api.Client, vaultClient *vault.Client) *Backup {
 	return &Backup{
-		client: client,
+		client:      client,
+		vaultClient: vaultClient,
 	}
 }
 
@@ -48,8 +51,7 @@ const (
 	BackupTargetDB = "backup-target-db"
 )
 
-// OnJob is a function of type pointer to Backup which takes a string and pointer to nomad job
-// and returns nil
+// OnJob is a function of type pointer to Backup which takes a string and pointer to nomad job and returns nil
 func (b *Backup) OnJob(eventType string, job *api.Job) {
 
 	// filter out all job IDs that do not have the prefix backup-
@@ -148,7 +150,7 @@ func (b *Backup) createBackupJob(jobId string, s settings) error {
 	}
 
 	// Parse the Nomad job spec from the buffer
-	job, err := jobspec.Parse(&buf)
+	job, err := jobspec.Parse("backup.hcl", &buf)
 	if err != nil {
 		return err
 	}
