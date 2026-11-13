@@ -13,12 +13,10 @@ jobs:
       - id: checkout
         name: Checkout Code
         uses: actions/checkout@v7
-      - id: setup-tools
-        name: Setup Tools
-        uses: buildpacks/github-actions/setup-tools@v5.12.5
-      - id: setup-pack
-        name: Setup Pack
-        uses: buildpacks/github-actions/setup-pack@v5.12.5
+      - name: Setup Dev Env
+        uses: jdx/mise-action@v5
+        with:
+          install: true
       - id: package
         name: Build Container
         run: pack \
