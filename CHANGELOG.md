@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/hashi-at-home/nomad-backup-operator/compare/v2.0.0...v2.0.1) (2026-11-14)
+
+
+### Bug Fixes
+
+* add semantic-release git plugin ([773aa54](https://github.com/hashi-at-home/nomad-backup-operator/commit/773aa5490f9b1f196d3d35c379fedf19c7133111))
+
 # [2.0.0](https://github.com/hashi-at-home/nomad-backup-operator/compare/v1.1.0...v2.0.0) (2026-11-14)
 
 
