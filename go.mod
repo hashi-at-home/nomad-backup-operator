@@ -2,7 +2,7 @@ module hashi-at-home/nomad-operator
 
 go 1.27.4
 
-require github.com/charmbracelet/log v1.0.0
+require github.com/charmbracelet/log/v2 v2.0.1
 
 require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
