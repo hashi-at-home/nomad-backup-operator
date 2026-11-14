@@ -53,7 +53,7 @@ jobs:
       - name: Get build artifacts from cache
         uses: actions/download-artifact@v8
       - name: Add release dependencies
-        run: npm i -G '@semantic-release/github' '@semantic-release/changelog'
+        run: npm i -G '@semantic-release/github' '@semantic-release/changelog' '@semantic-release/git'
       - name: Semantic Release
         run: npx semantic-release
         env:
