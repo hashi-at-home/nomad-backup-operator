@@ -4,10 +4,14 @@ branches:
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/changelog"
-  - - "@semantic-release/git":
-      assets: ["CHANGELOG.md"]
   - "@semantic-release/release-notes-generator"
-  - - "@semantic-release/github":
-      assets:
-        - path: nomad-operator*
-          label: binary
+  - - "@semantic-release/github"
+    - assets:
+        - path: dist/nomad-operator-linux
+          label: nomad-operator-linux
+        - path: dist/nomad-operator-linux-arm64
+          label: nomad-operator-linux-arm64
+        - path: dist/nomad-operator-linux-arm
+          label: nomad-operator-linux-arm
+  - - "@semantic-release/git"
+    - assets: ["CHANGELOG.md"]
