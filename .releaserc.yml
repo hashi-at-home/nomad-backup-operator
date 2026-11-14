@@ -7,8 +7,8 @@ plugins:
   - "@semantic-release/release-notes-generator"
   - - "@semantic-release/github"
     - assets:
-        - path: nomad-operator-linux
-          label: nomad-operator-linux
+        - path: nomad-operator-linux-amd64
+          label: nomad-operator-linux-amd64
         - path: nomad-operator-linux-arm64
           label: nomad-operator-linux-arm64
         - path: nomad-operator-linux-arm
