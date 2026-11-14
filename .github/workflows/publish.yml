@@ -6,9 +6,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  buildpack:
-    name: Buildpack
+  build:
+    name: Build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - arm
+          - arm64
+          - amd64
     steps:
       - id: checkout
         name: Checkout Code
@@ -17,3 +23,34 @@ jobs:
         uses: jdx/mise-action@v5
         with:
           install: true
+      - name: Build app
+        run: |
+          go build -buildmode exe -o dist/nomad-operator-linux-${{ matrix.arch }} .
+          ls -lht dist
+          file dist/*
+        env:
+          GOARCH: ${{ matrix.arch }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: nomad-operator-linux-${{ matrix.arch }}
+          path: dist/nomad-operator-linux-${{ matrix.arch }}
+  release:
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+      artifact-metadata: write
+    name: Release
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v8
+      - name: Add release dependencies
+        run: npm i -G '@semantic-release/github'
+      - name: Semantic Release
+        run: npx semantic-release

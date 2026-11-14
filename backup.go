@@ -16,7 +16,7 @@ import (
 // backupHcl is the name of the backup hcl file
 // it will use the go:embed to embed it in the binary
 
-//go:embed backup.hcl
+//go:embed backup.hcl.tmpl
 var backupHcl string
 
 // Backup is a struct containing a pointer to a nomad API client
@@ -150,7 +150,7 @@ func (b *Backup) createBackupJob(jobId string, s settings) error {
 	}
 
 	// Parse the Nomad job spec from the buffer
-	job, err := jobspec.Parse("backup.hcl", &buf)
+	job, err := jobspec.Parse("backup.hcl.tmpl", &buf)
 	if err != nil {
 		return err
 	}
