@@ -17,10 +17,3 @@ jobs:
         uses: jdx/mise-action@v5
         with:
           install: true
-      - id: package
-        name: Build Container
-        run: pack \
-          build \
-          ghcr.io/hashi-at-home/nomad-operator \
-          --path . \
-          --builder paketobuildpacks/builder-jammy-tiny
