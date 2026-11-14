@@ -26,3 +26,9 @@ dist/
 
 # editor cruft
 .vscode/
+
+# Nomad snapshot artifacts
+*.tar.gz
+meta.json
+state.bin
+SHA256SUMS

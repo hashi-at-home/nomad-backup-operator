@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
-
-	nomad "github.com/hashicorp/nomad/api"
-	vault "github.com/hashicorp/vault/api"
+	"path/filepath"
+	"time"
 
 	"github.com/charmbracelet/log"
 )
@@ -42,53 +42,119 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("NOMAD_TOKEN not set.")
 	}
 	// create Vault client
-	vaultConfig := vault.DefaultConfig()
-	vaultConfig.Address = os.Getenv("VAULT_ADDR")
+	// vaultConfig := vault.DefaultConfig()
+	// vaultConfig.Address = os.Getenv("VAULT_ADDR")
 
-	vaultClient, err := vault.NewClient(vaultConfig)
-	if err != nil {
-		log.Fatal("Unable to initialize Vault")
-	}
+	// vaultClient, err := vault.NewClient(vaultConfig)
+	// if err != nil {
+	// 	log.Fatal("Unable to initialize Vault")
+	// }
 
-	vaultClient.SetToken(os.Getenv("VAULT_TOKEN"))
+	// vaultClient.SetToken(os.Getenv("VAULT_TOKEN"))
 
 	// create Nomad client by calling NewClient()
-	client, err := nomad.NewClient(&nomad.Config{Address: os.Getenv("NOMAD_ADDR"), Namespace: "default"})
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("Starting Nomad backup operator")
-	peers, err := client.Status().Peers()
-	fmt.Printf("There are %d Peers\n", len(peers))
-	for k, p := range peers {
-		fmt.Printf("Peer: %d is %s\n", k, p)
+	// client, err := nomad.NewClient(&nomad.Config{Address: os.Getenv("NOMAD_ADDR"), Namespace: "default"})
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	if err := logTokenInfo(ctx, nomadAddr, nomadToken); err != nil {
+		return fmt.Errorf("nomad token preflight: %w", err)
 	}
 
+	path, err := saveSnapshot(ctx, nomadAddr, nomadToken, snapshotOutDir)
 	if err != nil {
-		fmt.Println(err)
+		return err
+	}
+	log.Info("snapshot saved", "path", path)
+	return nil
+}
+
+// logTokenInfo verifies that the token passed to the application is accepted by Nomad,
+// logs its name and policies, by calling the Nomad API with a context
+// and returns an optional error
+func logTokenInfo(ctx context.Context, addr, token string) error {
+	resp, err := nomadGet(ctx, addr, token, "/v1/acl/token/self")
+	if err != nil {
 		return err
 	}
 
-	backup := NewBackup(client, vaultClient)
-	consumer := NewConsumer(client, backup.OnJob, vaultClient)
-	fmt.Println(backup.client.Address())
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("unexpected status on token self lookup: %s", resp.Status)
+	}
 
-	// create signals channel to listen for signals sent to us from the OS
-	fmt.Println("Making channel")
-	signals := make(chan os.Signal, 1)
-	// Watch for SIGINT or SIGTERM signals
-	fmt.Println(len(signals))
-	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
+	// This will hold the return data of the Nomad token's self lookup
+	var tokenSelf struct {
+		Name     string
+		Type     string
+		Policies []string
+	}
 
-	// anonymous shutdown function.
-	go func() {
-		s := <-signals
-		fmt.Printf("Received %s, stopping\n", s)
-		consumer.Stop()
-		os.Exit(0)
-	}()
+	// decode the body into the struct
+	if err := json.NewDecoder(resp.Body).Decode(&tokenSelf); err != nil {
+		return err
+	}
 
-	// start the consumer with the vault client
-	consumer.Start(vaultClient)
+	log.Info("Nomad token verified", "name", tokenSelf.Name, "type", tokenSelf.Type)
+
 	return nil
+
+}
+
+// nomadGet is a wrapper around the Nomad API to call Nomad
+func nomadGet(ctx context.Context, addr, token, path string) (*http.Response, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, addr+path, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("X-Nomad-Token", token)
+	return http.DefaultClient.Do(req)
+}
+
+// saveSnapshot is a function which calls the Nomad API to generate a snapshot
+// of the Nomad state
+// and write the snapshot to a local cache
+// It returns a string representing the path to the snapshot and an optional error
+func saveSnapshot(ctx context.Context, addr string, token string, dir string) (string, error) {
+	// Call the nomadGet wrapper
+	resp, err := nomadGet(ctx, addr, token, "/v1/operator/snapshot")
+
+	if err != nil {
+		// if the call fails, we have an empty path and an error
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		// if the call returns anything other than an OK status, find out why and log it.
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 1024))
+		log.Error("Snapshot request failed", "status", resp.Status, "body", string(body))
+		return "", fmt.Errorf("token needs operator:write or operator:snapshot-save permissions")
+	}
+
+	// prepare to write the snapshot
+	tmp, err := os.CreateTemp(dir, "nomad-snapshot.tmp")
+	if err != nil {
+		return "", err
+	}
+
+	log.Info("Downloading snapshot", "tmp", tmp.Name())
+
+	if _, err := io.Copy(tmp, resp.Body); err != nil {
+		tmp.Close()
+		return "", fmt.Errorf("Error writing snapshot: %w", err)
+	}
+
+	if err := tmp.Close(); err != nil {
+		return "", err
+	}
+
+	final := filepath.Join(dir, fmt.Sprintf("nomad-snapshot-%s.tar.gz", time.Now().UTC().Format("20060102T150405Z")))
+
+	if err := os.Rename(tmp.Name(), final); err != nil {
+		return "", err
+	}
+	return final, nil
 }
