@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/hashi-at-home/nomad-backup-operator/compare/v2.0.2...v2.0.3) (2026-11-14)
+
+
+### Bug Fixes
+
+* add proper arch to asset name for amd64 ([e8204aa](https://github.com/hashi-at-home/nomad-backup-operator/commit/e8204aa9ebedbc612e9a27faf74fb88ba91e47c2))
+
 ## [2.0.2](https://github.com/hashi-at-home/nomad-backup-operator/compare/v2.0.1...v2.0.2) (2026-11-14)
 
 
