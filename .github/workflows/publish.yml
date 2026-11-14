@@ -53,6 +53,8 @@ jobs:
       - name: Download math result for job 1
         uses: actions/download-artifact@v8
       - name: Add release dependencies
-        run: npm i -G '@semantic-release/github'
+        run: npm i -G '@semantic-release/github' '@semantic-release/changelog'
       - name: Semantic Release
         run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
