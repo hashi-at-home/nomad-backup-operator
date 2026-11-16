@@ -4,6 +4,6 @@ auto_install = true
 [env]
 
 [tools]
-prek = "0.5.10"
+prek = "0.5.11"
 go = "1.27"
 pack = "0.40.11"
